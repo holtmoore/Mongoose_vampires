@@ -1,24 +1,16 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const vampireSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true  // Name is a required field
-    },
-    title: String,
-    hair_color: {
-        type: String,
-        default: 'blonde' // Default value for hair color is 'blonde'
-    },
-    eye_color: String,
-    dob: Date,
-    loves: [String],
-    location: String,
-    gender: String,
-    victims: {
-        type: Number,
-        min: 0 // No vampire will have less than 0 victims
-    },
+const vampireSchema = new Schema({
+  name: { type: String, required: true },
+  title: String,
+  hair_color: { type: String, default: 'blonde' },
+  eye_color: String,
+  dob: Date,
+  loves: [String],
+  location: String,
+  gender: String,
+  victims: { type: Number, min: 0 }
 });
 
 const Vampire = mongoose.model('Vampire', vampireSchema);

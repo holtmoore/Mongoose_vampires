@@ -31,7 +31,7 @@ db.on('open', () => {
         } else {
             console.log("Added provided vampire data", vampires);
 
-            // Create 4 new vampires
+            // Create new vampires
             Vampire.create(newVampiresData, (err, newVampires) => {
                 if (err) {
                     console.log(err);
@@ -41,6 +41,40 @@ db.on('open', () => {
             });
         }
     });
+});
+// Querying by 
+Vampire.find({ gender: 'f' }, (err, vampires) => {
+    if (err) console.log(err);
+    console.log(vampires);
+});
+
+Vampire.find({ victims: { $gt: 500 } }, (err, vampires) => {
+    if (err) console.log(err);
+    console.log(vampires);
+});
+
+Vampire.find({ victims: { $lte: 150 } }, (err, vampires) => {
+    if (err) console.log(err);
+    console.log(vampires);
+});
+
+Vampire.find({ victims: { $ne: 210234 } }, (err, vampires) => {
+    if (err) console.log(err);
+    console.log(vampires);
+});
+
+Vampire.find({ 
+    victims: { $gt: 150, $lt: 500 } 
+}, (err, vampires) => {
+    if (err) console.log(err);
+    console.log(vampires);
+});
+
+Vampire.find({ 
+    victims: { $gt: 150, $lt: 500 } 
+}, (err, vampires) => {
+    if (err) console.log(err);
+    console.log(vampires);
 });
 
 
