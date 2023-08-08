@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
-const path = require('path'); // <-- To serve the frontend HTML
 const seedData = require('./models/seed_vampires');
 const Vampire = require('./models/vampire');
 const newVampiresData = require('./models/new_vampires');
@@ -67,11 +66,6 @@ app.post('/vampires', async (req, res) => {
     }
 });
 
-
-// Basic Frontend to display the vampires
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
 
 
 
