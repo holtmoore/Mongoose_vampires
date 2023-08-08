@@ -62,16 +62,13 @@ async function fetchVampiresByComparison() {
       });
       console.log(vampiresBetween150and500Victims);
   
-      // This seems like a duplicate of the query above, so I'm just going to omit it
-      // However, if it's different, you can use the same async/await pattern
+    
   
     } catch (err) {
       console.error(err);
     }
   }
   
-  // Call the function
-  fetchVampiresByComparison();
   
 // by exists or does not exist
 async function fetchVampiresByExistence() {
@@ -97,9 +94,7 @@ async function fetchVampiresByExistence() {
       console.error(err);
     }
   }
-  
-  // Call the function
-  fetchVampiresByExistence();
+
   
 //   select with or
 
@@ -141,8 +136,159 @@ async function fetchVampires() {
     }
   }
   
- 
+//   Select objects that match one of several values
+  async function fetchVampiresByPreference() {
+    try {
+      
+      const vampiresFrillyFashion = await Vampire.find({
+        loves: { $in: ['frilly shirtsleeves', 'frilly collars'] }
+      });
+      console.log(vampiresFrillyFashion);
+  
+      
+      const vampiresLoveBrooding = await Vampire.find({
+        loves: 'brooding'
+      });
+      console.log(vampiresLoveBrooding);
+  
+
+      const vampiresVariedInterests = await Vampire.find({
+        loves: { $in: ['appearing innocent', 'trickery', 'lurking in rotting mansions', 'R&B music'] }
+      });
+      console.log(vampiresVariedInterests);
+  
+    
+      const vampiresFancyCloaks = await Vampire.find({
+        loves: 'fancy cloaks',
+        $and: [{ loves: { $nin: ['top hats', 'virgin blood'] } }]
+      });
+      console.log(vampiresFancyCloaks);
+  
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+// Negative Selection
+async function fetchVampiresWithNegativeSelectionCriteria() {
+    try {
+      // Love ribbons but do not have brown eyes
+      const ribbonLoversWithoutBrownEyes = await Vampire.find({ 
+        loves: 'ribbons',
+        eye_color: { $ne: 'brown' }
+      });
+      console.log("Vampires who love ribbons but do not have brown eyes:", ribbonLoversWithoutBrownEyes);
+  
+      // Are not from Rome
+      const notFromRome = await Vampire.find({ 
+        location: { $ne: 'Rome' }
+      });
+      console.log("Vampires not from Rome:", notFromRome);
+  
+      // Do not love any of the following
+      const notLovingCertainThings = await Vampire.find({
+        loves: {
+          $nin: [
+            'fancy cloaks',
+            'frilly shirtsleeves',
+            'appearing innocent',
+            'being tragic',
+            'brooding'
+          ]
+        }
+      });
+      console.log("Vampires not loving certain things:", notLovingCertainThings);
+  
+      // Have not killed more than 200 people
+      const withLessVictims = await Vampire.find({
+        victims: { $lte: 200 }
+      });
+      console.log("Vampires with less or equal to 200 victims:", withLessVictims);
+  
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function replaceVampires() {
+    try {
+      // Replace Claudia with Eve
+      await Vampire.findOneAndReplace({ name: 'Claudia' }, {
+        name: 'Eve',
+        portrayed_by: 'Tilda Swinton'
+      });
+      console.log("Replaced Claudia with Eve.");
+  
+      // Replace the first male vampire with Guy Man
+      await Vampire.findOneAndReplace({ gender: 'm' }, {
+        name: 'Guy Man',
+        is_actually: 'were-lizard'
+      });
+      console.log("Replaced the first male vampire with Guy Man.");
+  
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function updateVampires() {
+    try {
+      // 1. Update 'Guy Man' to have a gender of 'f'
+      await Vampire.updateOne({ name: 'Guy Man' }, { gender: 'f' });
+      console.log("Updated Guy Man's gender to 'f'.");
+  
+      // 2. Update 'Eve' to have a gender of 'm'
+      await Vampire.updateOne({ name: 'Eve' }, { gender: 'm' });
+      console.log("Updated Eve's gender to 'm'.");
+  
+      // 3. Update 'Guy Man' to have a 'hates' array
+      await Vampire.updateOne({ name: 'Guy Man' }, { $set: { hates: ['clothes', 'jobs'] } });
+      console.log("Updated Guy Man's hates array with 'clothes' and 'jobs'.");
+  
+      // 4. Add 'alarm clocks' and 'jackalopes' to 'Guy Man's' hates array
+      await Vampire.updateOne({ name: 'Guy Man' }, { $push: { hates: ['alarm clocks', 'jackalopes'] } });
+      console.log("Updated Guy Man's hates array to include 'alarm clocks' and 'jackalopes'.");
+  
+      // 5. Rename 'Eve's' name field to 'moniker'
+      await Vampire.updateOne({ name: 'Eve' }, { $rename: { 'name': 'moniker' } });
+      console.log("Renamed Eve's name field to 'moniker'.");
+  
+      // 6. Update all females to gender 'fems'
+      await Vampire.updateMany({ gender: 'f' }, { gender: 'fems' });
+      console.log("Updated all female vampires' gender to 'fems'.");
+  
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function removeVampires() {
+    try {
+      // 1. Remove a single vampire with brown hair color
+      await Vampire.deleteOne({ hair_color: 'brown' });
+      console.log("Removed a vampire with brown hair color.");
+  
+      // 2. Remove all vampires with blue eyes
+      await Vampire.deleteMany({ eye_color: 'blue' });
+      console.log("Removed all vampires with blue eyes.");
+  
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  
+  
+  
+  
+  
+  removeVampires();
+  updateVampires();
+  replaceVampires();
+  fetchVampiresWithNegativeSelectionCriteria();
+  fetchVampiresByPreference();
   fetchVampires();
+  fetchVampiresByExistence();
+  fetchVampiresByComparison();
   
 // Routes
 app.get('/vampires', async (req, res) => {
