@@ -42,7 +42,7 @@ db.on('open', () => {
         }
     });
 });
-// Querying by 
+// Querying by comparison
 Vampire.find({ gender: 'f' }, (err, vampires) => {
     if (err) console.log(err);
     console.log(vampires);
@@ -76,6 +76,44 @@ Vampire.find({
     if (err) console.log(err);
     console.log(vampires);
 });
+// by exists or does not exist
+Vampire.find({ title: { $exists: true } }, (err, vampiresWithTitle) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(vampiresWithTitle);
+  });
+  
+  Vampire.find({ victims: { $exists: false } }, (err, vampiresWithoutVictims) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(vampiresWithoutVictims);
+  });
+  
+  Vampire.find({ 
+    title: { $exists: true }, 
+    victims: { $exists: false } 
+  }, (err, vampiresWithTitleAndNoVictims) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(vampiresWithTitleAndNoVictims);
+  });
+  
+  Vampire.find({ 
+    victims: { $exists: true, $gt: 1000 } 
+  }, (err, vampiresWithMoreThan1000Victims) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(vampiresWithMoreThan1000Victims);
+  });
+//   select with or
 
 
 
