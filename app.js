@@ -22,24 +22,21 @@ db.on('connected', () => console.log('mongo connected: ', mongoURI));
 db.on('disconnected', () => console.log('mongo disconnected'));
 
 db.on('open', () => {
-    console.log('Connection made!');
+  console.log('Connection made!');
 
-    Vampire.insertMany(seedData, (err, vampires) => {
-        if (err) { 
-            console.log(err); 
-        } else {
-            console.log("Added provided vampire data", vampires);
-
-            Vampire.create(newVampiresData, (err, newVampires) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    console.log("Added new sample vampires", newVampires);
-                }
-            });
-        }
-    });
+  Vampire.insertMany(seedData)
+      .then(vampires => {
+          console.log("Added provided vampire data", vampires);
+          return Vampire.create(newVampiresData);
+      })
+      .then(newVampires => {
+          console.log("Added new sample vampires", newVampires);
+      })
+      .catch(err => {
+          console.error(err);
+      });
 });
+
 // Querying by comparison
 async function fetchVampiresByComparison() {
     try {
