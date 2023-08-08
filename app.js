@@ -3,7 +3,7 @@ const app = express();
 const mongoose = require('mongoose');
 const seedData = require('./models/seed_vampires');
 const Vampire = require('./models/vampire');
-const newVampiresData = require('./models/new_vampires');
+const newVampiresData = require('./models/newvampires');
 
 
 // Configuration
